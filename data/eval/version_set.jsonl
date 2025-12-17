@@ -1,1 +1,3 @@
 {"id":"v1","type":"version","question":"In the latest policy, how long do refunds take?","expect":"cite_or_refuse"}
+{"id":"v2","type":"version","question":"In v1 policy, how long do refunds take?","expect":"cite_or_refuse"}
+{"id":"v3","type":"version","question":"In the latest policy, how long do refunds take?","expect":"cite_or_refuse"}

@@ -1,6 +1,7 @@
-import json
 import requests
 from src.config import settings
+
+_session = requests.Session()
 
 def call_ollama(system: str, user: str) -> str:
     url = f"{settings.ollama_url.rstrip('/')}/api/chat"
@@ -11,14 +12,18 @@ def call_ollama(system: str, user: str) -> str:
             {"role": "user", "content": user},
         ],
         "stream": False,
-        "options": {"temperature": 0.0},
+        "options": {
+            "temperature": 0.0,
+            "num_predict": 220,   # HARD CAP response length (big speedup)
+            "top_p": 1.0,
+        },
     }
-    r = requests.post(url, json=payload, timeout=120)
+
+    # (connect timeout, read timeout)
+    r = _session.post(url, json=payload, timeout=(10, 180))
     r.raise_for_status()
     data = r.json()
     return data["message"]["content"]
 
 def generate_text(system: str, user: str) -> str:
-    # If you want OpenAI, implement it here using an SDK or HTTP.
-    # Keep evaluation identical regardless of provider.
     return call_ollama(system, user)

@@ -18,13 +18,20 @@ def build_prompt(question: str, chunks: list[RetrievedChunk], strict: bool = Fal
     system = "You are a compliance evidence assistant.\n" + rules
 
     sources = "\n\n".join(
-        f"SOURCE {i+1}: [{c.doc_id}@{c.version}#{c.chunk_id}] ({c.section})\n{c.text}"
-        for i, c in enumerate(chunks)
-    )
+    f"SOURCE {i+1}: [{c.doc_id}@{c.version}#{c.chunk_id}] ({c.section})\n{c.text[:900]}"
+    for i, c in enumerate(chunks)
+)
+
 
     user = (
-        f"QUESTION:\n{question}\n\n"
-        f"SOURCES:\n{sources}\n\n"
-        "Write a short answer. If conflicting sources exist, explicitly say so and cite both.\n"
-    )
+    f"QUESTION:\n{question}\n\n"
+    f"SOURCES:\n{sources}\n\n"
+    "Task:\n"
+    "- Answer in 1-2 sentences.\n"
+    "- If multiple versions exist, assume the latest version unless the user asks for an older version.\n"
+    "- Do NOT add uncertainty language if the sources contain an answer.\n"
+    "- Every sentence must include citations.\n"
+    "- If sources do not contain the answer, refuse.\n"
+)
+
     return system, user
