@@ -1,0 +1,2 @@
+{"id":"q1","type":"answerable","question":"How long do refunds take?","expect":"cite_or_refuse"}
+{"id":"q2","type":"unanswerable","question":"Do you refund crypto payments?","expect":"refuse"}
